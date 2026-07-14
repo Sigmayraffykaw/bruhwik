@@ -1,4 +1,4 @@
-# BruhWik
+# BruhWiks
 
 A premium Spotify customization concept built with Next.js, Tailwind CSS, Framer Motion and Lucide icons.
 
