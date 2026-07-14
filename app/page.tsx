@@ -1,82 +1,115 @@
 "use client";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Check, ChevronDown, Download, Heart, Menu, Monitor, Moon, Palette, Play, Search, Sparkles, Star, Terminal, TrendingUp, WandSparkles, X, Zap, Boxes, Eye, ShieldCheck, Cpu, Github, Apple } from "lucide-react";
-import { useMemo, useState } from "react";
 
-const themes=[
-{name:"Nebula Bloom",by:"nova.exe",tag:"Trending",likes:"18.4K",downloads:"64K",bg:"linear-gradient(135deg,#15132f,#7c3aed 52%,#ec4899)"},
-{name:"AMOLED Ultra",by:"mika",tag:"Popular",likes:"12.9K",downloads:"51K",bg:"linear-gradient(145deg,#000,#111 45%,#16a34a)"},
-{name:"Cyberwave 2077",by:"zzero",tag:"Cyberpunk",likes:"9.7K",downloads:"38K",bg:"linear-gradient(135deg,#06162d,#0066ff 42%,#ff008c)"},
-{name:"Sakura Dream",by:"kyomi",tag:"Anime",likes:"8.2K",downloads:"31K",bg:"linear-gradient(135deg,#351333,#fb5ca8 52%,#ffe1ec)"},
-{name:"Nord Minimal",by:"arthur",tag:"Minimal",likes:"7.6K",downloads:"29K",bg:"linear-gradient(135deg,#121820,#334155 55%,#8fbcc0)"},
-{name:"RGB Overdrive",by:"flux",tag:"Gaming",likes:"6.1K",downloads:"22K",bg:"linear-gradient(135deg,#0e071c,#6d28d9 38%,#00e5ff 70%,#ff167d)"}
+import { useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ArrowRight, BadgeCheck, Boxes, Check, ChevronDown, CirclePlay,
+  Download, Eye, Github, Heart, Layers3, Menu, Monitor, Moon, Palette,
+  Search, ShieldCheck, Sparkles, Star, Terminal, WandSparkles, X, Zap,
+  Apple, Gamepad2, SlidersHorizontal, Code2, Users, Radio, UploadCloud
+} from "lucide-react";
+
+const themes = [
+  {name:"Nebula Bloom", creator:"nova.exe", category:"Trending", likes:"18.4K", installs:"64K", accent:"#b96cff", gradient:"linear-gradient(135deg,#17132f 0%,#7c3aed 48%,#ec4899 100%)"},
+  {name:"AMOLED Ultra", creator:"mika", category:"Minimal", likes:"12.9K", installs:"51K", accent:"#35f27d", gradient:"linear-gradient(135deg,#000 0%,#111 58%,#168347 100%)"},
+  {name:"Cyberwave 2077", creator:"zzero", category:"Cyberpunk", likes:"9.7K", installs:"38K", accent:"#00e5ff", gradient:"linear-gradient(135deg,#071632 0%,#0066ff 45%,#ff008c 100%)"},
+  {name:"Sakura Dream", creator:"kyomi", category:"Anime", likes:"8.2K", installs:"31K", accent:"#ff7bbd", gradient:"linear-gradient(135deg,#351333 0%,#fb5ca8 54%,#ffe1ec 100%)"},
+  {name:"Nord Minimal", creator:"arthur", category:"Minimal", likes:"7.6K", installs:"29K", accent:"#88c0d0", gradient:"linear-gradient(135deg,#121820 0%,#334155 58%,#8fbcc0 100%)"},
+  {name:"RGB Overdrive", creator:"flux", category:"Gaming", likes:"6.1K", installs:"22K", accent:"#8b5cf6", gradient:"linear-gradient(135deg,#0e071c 0%,#6d28d9 38%,#00e5ff 72%,#ff167d 100%)"},
 ];
-const features=[
-[Palette,"Beautiful themes","Curated community designs that transform every screen."],
-[Zap,"Instant setup","Choose your platform and get a ready-to-use setup guide."],
-[Boxes,"Powerful extensions","Mini apps, visualizers and quality-of-life upgrades."],
-[Eye,"Live preview","See every detail before adding anything to your setup."],
-[Moon,"True OLED","Pure-black interfaces built for OLED displays."],
-[ShieldCheck,"Safe by design","Transparent community files with clear install steps."]
+
+const extensions = [
+  {icon:Radio, title:"Wave Visualizer", text:"Reactive audio visualizations that feel native."},
+  {icon:SlidersHorizontal, title:"Smart Controls", text:"Deeper playback controls without clutter."},
+  {icon:Gamepad2, title:"Discord Presence", text:"Rich activity with artwork, time and status."},
+  {icon:Code2, title:"Creator SDK", text:"Build, test and publish extensions faster."},
 ];
-const filters=["Popular","Trending","New","Anime","Minimal","Gaming","RGB","Cyberpunk"];
-const faq=[
-["What does the download button do?","It downloads a platform-specific BruhWiks setup guide immediately. The full desktop app is still in development, so the site never pretends to download software that does not exist yet."],
-["Is BruhWiks affiliated with Spotify?","No. BruhWiks is an independent community customization project and is not affiliated with or endorsed by Spotify AB."],
-["Will there be a real installer?","Yes. When the desktop client is ready, these same download buttons can be connected to signed Windows, macOS and Linux releases."],
-["Can creators upload themes?","Creator profiles, uploads, versioning and moderation are planned for the next major release."]
+
+const faqs = [
+  ["Is BruhWiks affiliated with Spotify?", "No. BruhWiks is an independent community customization project and is not affiliated with or endorsed by Spotify AB."],
+  ["Do the download buttons install the app?", "Not yet. The current buttons download platform setup notes while the signed desktop client is being prepared."],
+  ["Can creators upload themes?", "Creator profiles, uploads, versioning and moderation are planned for the next major release."],
+  ["Will BruhWiks stay free?", "The core browsing and community experience is planned to remain free."],
 ];
 
 function downloadGuide(os:string){
- const guides:any={
- Windows:`BruhWiks for Windows\n\n1. Keep Spotify Desktop installed.\n2. Visit bruhwiks.com for verified themes.\n3. The BruhWiks desktop installer is currently in development.\n4. Never run unknown scripts from untrusted creators.\n\nThanks for joining BruhWiks early.`,
- macOS:`BruhWiks for macOS\n\n1. Keep Spotify Desktop installed.\n2. Browse verified themes on bruhwiks.com.\n3. The signed macOS client is currently in development.\n4. Only install files from trusted BruhWiks releases.`,
- Linux:`BruhWiks for Linux\n\n1. Keep Spotify Desktop installed.\n2. Browse verified themes on bruhwiks.com.\n3. The Linux package is currently in development.\n4. Official packages will be published with checksums.`};
- const blob=new Blob([guides[os]],{type:"text/plain"}); const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download=`BruhWiks-${os}-Setup.txt`; a.click(); URL.revokeObjectURL(url);
+  const body=`BruhWiks ${os} Preview\n\nThe signed desktop app is still in development.\n\n1. Keep Spotify Desktop installed.\n2. Browse verified themes at https://bruhwiks.com.\n3. Only install files published through official BruhWiks releases.\n4. Never run unknown scripts from untrusted creators.\n\nThanks for joining early.`;
+  const blob=new Blob([body],{type:"text/plain"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url; a.download=`BruhWiks-${os}-Preview.txt`; a.click(); URL.revokeObjectURL(url);
 }
 
+function Brand(){return <a href="#top" className="brand"><span><WandSparkles size={18}/></span>BruhWiks<b>.</b></a>}
+
 export default function Home(){
- const [menu,setMenu]=useState(false); const [filter,setFilter]=useState("Popular"); const [query,setQuery]=useState(""); const [toast,setToast]=useState("");
- const {scrollYProgress}=useScroll(); const heroY=useTransform(scrollYProgress,[0,.35],[0,120]);
- const visible=useMemo(()=>themes.filter(t=>(filter==="Popular"||t.tag===filter||filter==="New")&&(t.name+t.by+t.tag).toLowerCase().includes(query.toLowerCase())),[filter,query]);
- const getGuide=(os:string)=>{downloadGuide(os);setToast(`${os} setup guide downloaded`);setTimeout(()=>setToast(""),2600)};
- return <main className="site-shell">
-  <div className="noise"/><div className="aurora a1"/><div className="aurora a2"/>
-  {toast&&<motion.div initial={{opacity:0,y:-15}} animate={{opacity:1,y:0}} className="toast"><Check size={16}/>{toast}</motion.div>}
-  <nav className="nav"><a href="#" className="brand"><span><WandSparkles size={18}/></span>BruhWiks<b>.</b></a>
-   <div className="navlinks">{["Home","Themes","Features","Community","Download"].map(x=><a key={x} href={`#${x.toLowerCase()}`}>{x}</a>)}</div>
-   <div className="navactions"><a className="ghost" href="https://github.com/Sigmayraffykaw/bruhwik"><Github size={16}/>GitHub</a><a className="primary small" href="#download"><Download size={16}/>Download</a></div>
-   <button className="menub" onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button>
-  </nav>
-  {menu&&<div className="mobilemenu">{["Home","Themes","Features","Community","Download"].map(x=><a onClick={()=>setMenu(false)} key={x} href={`#${x.toLowerCase()}`}>{x}</a>)}</div>}
+  const [menu,setMenu]=useState(false);
+  const [query,setQuery]=useState("");
+  const [filter,setFilter]=useState("All");
+  const [activeTheme,setActiveTheme]=useState(themes[0]);
+  const [liked,setLiked]=useState<string[]>([]);
+  const filtered=useMemo(()=>themes.filter(t=>(filter==="All"||t.category===filter)&&(t.name+t.creator+t.category).toLowerCase().includes(query.toLowerCase())),[filter,query]);
+  const categories=["All","Trending","Minimal","Anime","Gaming","Cyberpunk"];
 
-  <section id="home" className="hero section"><motion.div initial={{opacity:0,y:24}} animate={{opacity:1,y:0}} transition={{duration:.8}} className="hero-copy">
-   <div className="eyebrow"><span/>The next era of Spotify customization</div>
-   <h1>Make Spotify feel<br/><em>completely yours.</em></h1>
-   <p>Discover premium themes, extensions and visual experiences—built by creators, installed in seconds.</p>
-   <div className="hero-buttons"><a className="primary" href="#download"><Download size={18}/>Download BruhWiks</a><a className="secondary" href="#themes"><Sparkles size={18}/>Explore themes</a></div>
-   <div className="trust"><span><Check/>Free forever</span><span><Check/>Open source</span><span><Check/>No ads</span></div>
-  </motion.div>
-  <motion.div style={{y:heroY}} initial={{opacity:0,scale:.93,rotateY:-8}} animate={{opacity:1,scale:1,rotateY:0}} transition={{duration:1}} className="product-wrap">
-   <div className="product-glow"/><div className="app-window"><div className="windowbar"><i/><i/><i/><span>BruhWiks Preview</span></div><div className="appbody"><aside><div className="play"><Play size={17} fill="currentColor"/></div>{[1,2,3,4,5].map(x=><b key={x} className={x===1?"active":""}/>)}</aside><div className="screen"><div className="screen-top"><div><small>GOOD EVENING</small><h3>Your universe</h3></div><div className="avatar"/></div><div className="albums">{["Neon nights","Dream state","No skips","Night drive"].map((x,i)=><div key={x}><div className={`album a${i}`}/><b>{x}</b><small>Made for you</small></div>)}</div><div className="player"><div className="mini-album"/><div><b>Afterglow</b><small>BruhWiks Sessions</small></div><div className="line"/><Play size={16} fill="currentColor"/></div></div></div></div>
-   <motion.div animate={{y:[0,-9,0]}} transition={{duration:4,repeat:Infinity}} className="floatcard"><Palette/><div><b>Live preview</b><small>See it before installing</small></div></motion.div>
-  </motion.div></section>
+  return <main id="top">
+    <div className="grain"/><div className="orb orb-one"/><div className="orb orb-two"/>
+    <nav className="nav shell"><Brand/><div className="nav-links">{["Themes","Extensions","Creators","Download"].map(x=><a key={x} href={`#${x.toLowerCase()}`}>{x}</a>)}</div><div className="nav-actions"><a href="https://github.com/Sigmayraffykaw/bruhwik" className="ghost"><Github size={16}/>GitHub</a><a href="#download" className="button compact"><Download size={16}/>Download</a></div><button className="menu" onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button></nav>
+    <AnimatePresence>{menu&&<motion.div initial={{opacity:0,y:-8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-8}} className="mobile-nav">{["Themes","Extensions","Creators","Download"].map(x=><a onClick={()=>setMenu(false)} key={x} href={`#${x.toLowerCase()}`}>{x}</a>)}</motion.div>}</AnimatePresence>
 
-  <div className="ticker">{["CREATOR FIRST","LIVE PREVIEWS","OPEN SOURCE","OLED READY","FAST & LIGHT","COMMUNITY BUILT"].map(x=><span key={x}>{x}<Sparkles size={13}/></span>)}</div>
+    <section className="hero shell">
+      <motion.div initial={{opacity:0,y:24}} animate={{opacity:1,y:0}} transition={{duration:.7}} className="hero-copy">
+        <div className="pill"><span/>BruhWiks Preview is live <ArrowRight size={14}/></div>
+        <h1>Your Spotify.<br/><em>Reimagined.</em></h1>
+        <p>Discover premium themes, powerful extensions and visual experiences built by a new generation of creators.</p>
+        <div className="hero-actions"><a href="#themes" className="button"><Sparkles size={18}/>Explore themes</a><a href="#download" className="button secondary"><Download size={18}/>Get BruhWiks</a></div>
+        <div className="proof"><div className="faces"><i>A</i><i>K</i><i>M</i><i>J</i></div><div><strong>12,000+ creators</strong><span>building the next music experience</span></div></div>
+      </motion.div>
 
-  <section id="features" className="section"><div className="section-head"><span>WHY BRUHWIK</span><h2>Everything you need.<br/><i>Nothing you don’t.</i></h2></div><div className="feature-grid">{features.map(([Icon,title,text]:any,i)=><motion.article initial={{opacity:0,y:25}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*.06}} key={title}><div className="icon"><Icon/></div><h3>{title}</h3><p>{text}</p><ArrowRight className="arr"/></motion.article>)}</div></section>
+      <motion.div initial={{opacity:0,scale:.92,rotateY:-8}} animate={{opacity:1,scale:1,rotateY:0}} transition={{duration:.9}} className="hero-product">
+        <div className="product-glow" style={{background:activeTheme.accent}}/>
+        <div className="desktop-frame">
+          <div className="frame-top"><div><i/><i/><i/></div><span>BruhWiks Live Preview</span><BadgeCheck size={14}/></div>
+          <div className="frame-body">
+            <aside><div className="round-play"><CirclePlay size={21}/></div>{[1,2,3,4,5].map(n=><b key={n} className={n===1?"on":""}/>)}</aside>
+            <div className="spotify-screen" style={{background:activeTheme.gradient}}>
+              <div className="screen-shade"/><div className="screen-head"><div><small>GOOD EVENING</small><h3>Your universe</h3></div><div className="profile"/></div>
+              <div className="album-grid">{["Neon nights","Dream state","No skips","Night drive"].map((x,i)=><div key={x}><div className={`cover cover-${i}`}/><b>{x}</b><small>Made for you</small></div>)}</div>
+              <div className="now-playing"><div className="mini-cover"/><div><b>Afterglow</b><small>BruhWiks Sessions</small></div><div className="progress"/><CirclePlay size={18}/></div>
+            </div>
+          </div>
+        </div>
+        <motion.div animate={{y:[0,-10,0]}} transition={{duration:4,repeat:Infinity}} className="float-card left"><Palette/><div><b>{activeTheme.name}</b><span>Live theme preview</span></div></motion.div>
+        <motion.div animate={{y:[0,9,0]}} transition={{duration:4.6,repeat:Infinity}} className="float-card right"><Zap/><div><b>One-click ready</b><span>Built for speed</span></div></motion.div>
+      </motion.div>
+    </section>
 
-  <section id="themes" className="themes"><div className="section"><div className="theme-heading"><div><span>THEME MARKETPLACE</span><h2>Find your new vibe.</h2></div><a href="#download">Get BruhWiks <ArrowRight/></a></div><div className="searchrow"><label><Search/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search themes or creators..."/></label><div className="filters">{filters.map(x=><button className={filter===x?"selected":""} onClick={()=>setFilter(x)} key={x}>{x}</button>)}</div></div><div className="theme-grid">{visible.map((t,i)=><motion.article layout initial={{opacity:0}} animate={{opacity:1}} whileHover={{y:-8}} key={t.name} className="theme-card"><div className="theme-img" style={{background:t.bg}}><span>{t.tag}</span><div className="fake-ui"><i/><i/><i/></div></div><div className="theme-info"><div><h3>{t.name}</h3><p>by {t.by}</p></div><button><Heart/></button></div><div className="meta"><span><Download/>{t.downloads}</span><span><Heart/>{t.likes}</span><button onClick={()=>getGuide("Windows")}>Install</button></div></motion.article>)}</div></div></section>
+    <div className="ticker">{["CREATOR FIRST","LIVE PREVIEWS","OPEN SOURCE","OLED READY","FAST & LIGHT","COMMUNITY BUILT"].map(x=><span key={x}>{x}<Sparkles size={13}/></span>)}</div>
 
-  <section id="community" className="section community"><div><span>BUILT TOGETHER</span><h2>The customization<br/>community deserves.</h2><p>BruhWiks is made for people who obsess over every pixel, animation and sound.</p><div className="avatars">{["A","K","M","J","S"].map(x=><i key={x}>{x}</i>)}<b>+12K</b></div></div><div className="stats">{[["250K+","Downloads"],["12K+","Themes"],["1M+","Installs"],["99.9%","Uptime"]].map(([n,l])=><article key={l}><strong>{n}</strong><span>{l}</span></article>)}</div></section>
+    <section className="section shell intro"><div className="section-label">THE PLATFORM</div><h2>Everything you need.<br/><em>Nothing you don’t.</em></h2><div className="feature-grid">{[
+      [Palette,"Premium themes","Handcrafted designs that transform every screen."],
+      [Zap,"Instant setup","Simple platform guides and clear installation paths."],
+      [Boxes,"Extensions","Mini apps that unlock more from your listening."],
+      [Eye,"Live preview","See every detail before adding anything."],
+      [Moon,"True OLED","Pure-black experiences for OLED displays."],
+      [ShieldCheck,"Verified releases","Transparent files and safer community publishing."]
+    ].map(([Icon,title,text]:any,i)=><motion.article initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*.05}} key={title}><div className="feature-icon"><Icon/></div><h3>{title}</h3><p>{text}</p><ArrowRight/></motion.article>)}</div></section>
 
-  <section id="download" className="download"><div className="download-inner"><div className="download-icon"><Monitor/></div><span>GET STARTED</span><h2>Your Spotify.<br/><em>Upgraded.</em></h2><p>Choose your platform. The button downloads an honest setup guide while the full desktop client is being built.</p><div className="platforms">
-   <button onClick={()=>getGuide("Windows")}><span><Monitor/></span><div><b>Windows</b><small>Windows 10+</small></div><Download/></button>
-   <button onClick={()=>getGuide("macOS")}><span><Apple/></span><div><b>macOS</b><small>macOS 12+</small></div><Download/></button>
-   <button onClick={()=>getGuide("Linux")}><span><Terminal/></span><div><b>Linux</b><small>Most distros</small></div><Download/></button>
-  </div><small className="fine">Version 0.1 Preview · Setup guides only · Desktop client coming soon</small></div></section>
+    <section id="themes" className="market"><div className="section shell"><div className="market-head"><div><div className="section-label">THEME MARKETPLACE</div><h2>Find your new vibe.</h2></div><a href="#download">Get BruhWiks <ArrowRight/></a></div>
+      <div className="toolbar"><label><Search/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search themes or creators..."/></label><div className="filters"><SlidersHorizontal size={16}/>{categories.map(c=><button className={filter===c?"active":""} onClick={()=>setFilter(c)} key={c}>{c}</button>)}</div></div>
+      <div className="theme-layout"><div className="theme-grid">{filtered.map(t=><motion.article layout whileHover={{y:-7}} onMouseEnter={()=>setActiveTheme(t)} key={t.name} className="theme-card"><div className="theme-shot" style={{background:t.gradient}}><span>{t.category}</span><div className="mini-window"><i/><i/><i/><div/></div><button onClick={()=>setLiked(v=>v.includes(t.name)?v.filter(x=>x!==t.name):[...v,t.name])}><Heart fill={liked.includes(t.name)?"currentColor":"none"}/></button></div><div className="theme-copy"><div><h3>{t.name}</h3><p>by {t.creator}</p></div><div className="theme-meta"><span><Download/>{t.installs}</span><span><Heart/>{t.likes}</span></div><button onClick={()=>downloadGuide("Windows")}>Install preview <ArrowRight/></button></div></motion.article>)}</div>
+      <aside className="curator"><span>LIVE CURATOR</span><div className="curator-preview" style={{background:activeTheme.gradient}}><div/><b>{activeTheme.name}</b><small>by {activeTheme.creator}</small></div><h3>Preview before you commit.</h3><p>Hover over any theme to update this panel instantly.</p><div className="swatches">{themes.slice(0,5).map(t=><button title={t.name} onClick={()=>setActiveTheme(t)} key={t.name} style={{background:t.accent}}/>)}</div><button className="button full" onClick={()=>downloadGuide("Windows")}><Download/>Install preview</button></aside></div>
+    </div></section>
 
-  <section className="section faq"><div className="section-head"><span>FAQ</span><h2>Questions, answered.</h2></div>{faq.map(([q,a])=><details key={q}><summary>{q}<ChevronDown/></summary><p>{a}</p></details>)}</section>
-  <footer><a href="#" className="brand"><span><WandSparkles size={18}/></span>BruhWiks<b>.</b></a><div>{["Privacy","Terms","GitHub","Discord","Twitter"].map(x=><a key={x} href={x==="GitHub"?"https://github.com/Sigmayraffykaw/bruhwik":"#"}>{x}</a>)}</div><p>Independent community project. Not affiliated with Spotify AB.</p></footer>
- </main>
+    <section id="extensions" className="section shell"><div className="split-head"><div><div className="section-label">EXTENSIONS</div><h2>Small tools.<br/><em>Huge upgrades.</em></h2></div><p>Give Spotify new abilities without turning your setup into a mess.</p></div><div className="extension-grid">{extensions.map(({icon:Icon,title,text},i)=><motion.article whileHover={{scale:1.02}} key={title}><div className={`extension-visual visual-${i}`}><Icon/></div><div><h3>{title}</h3><p>{text}</p><span>Coming soon <ArrowRight/></span></div></motion.article>)}</div></section>
+
+    <section id="creators" className="creator-section"><div className="section shell creator-inner"><div><div className="section-label">FOR CREATORS</div><h2>Build the theme<br/>everyone remembers.</h2><p>Publish themes, ship updates, grow an audience and build your reputation from one creator dashboard.</p><div className="creator-points">{["Versioned releases","Live preview studio","Analytics and feedback","Community verification"].map(x=><span key={x}><Check/>{x}</span>)}</div><a className="button secondary" href="https://github.com/Sigmayraffykaw/bruhwik"><Github/>View source</a></div><div className="dashboard-card"><div className="dash-top"><span>Creator dashboard</span><div><i/><i/><i/></div></div><div className="dash-stats"><article><small>Total installs</small><b>128,402</b><em>+18.2%</em></article><article><small>Theme rating</small><b>4.9</b><em>Top 1%</em></article></div><div className="chart">{[35,48,44,61,57,72,79,91,84,100].map((h,i)=><i key={i} style={{height:`${h}%`}}/>)}</div><div className="dash-release"><div className="release-icon"><UploadCloud/></div><div><b>Nebula Bloom 2.4</b><span>Published successfully</span></div><BadgeCheck/></div></div></div></section>
+
+    <section className="section shell community"><div><div className="section-label">BUILT TOGETHER</div><h2>The customization<br/>community deserves.</h2><p>Made for people who care about every pixel, animation and sound.</p><div className="community-users"><div className="faces big"><i>A</i><i>K</i><i>M</i><i>J</i><i>S</i></div><strong>Join 12K+ early creators</strong></div></div><div className="stats">{[["250K+","Downloads"],["12K+","Themes"],["1M+","Installs"],["99.9%","Uptime"]].map(([n,l])=><article key={l}><strong>{n}</strong><span>{l}</span></article>)}</div></section>
+
+    <section id="download" className="download-section"><div className="download-glow"/><div className="section shell download-inner"><div className="download-mark"><Monitor/></div><div className="section-label">GET STARTED</div><h2>Your Spotify.<br/><em>Upgraded.</em></h2><p>Choose your platform. Preview setup guides are available now while the signed desktop client is being built.</p><div className="platforms"><button onClick={()=>downloadGuide("Windows")}><span><Monitor/></span><div><b>Windows</b><small>Windows 10+</small></div><Download/></button><button onClick={()=>downloadGuide("macOS")}><span><Apple/></span><div><b>macOS</b><small>macOS 12+</small></div><Download/></button><button onClick={()=>downloadGuide("Linux")}><span><Terminal/></span><div><b>Linux</b><small>Most distros</small></div><Download/></button></div><small className="fine">Preview 0.2 • Setup guides only • Signed app coming soon</small></div></section>
+
+    <section className="section shell faq"><div className="section-label">FAQ</div><h2>Questions, answered.</h2>{faqs.map(([q,a])=><details key={q}><summary>{q}<ChevronDown/></summary><p>{a}</p></details>)}</section>
+
+    <footer className="shell"><Brand/><div>{["Themes","Extensions","GitHub","Discord","Privacy"].map(x=><a key={x} href={x==="GitHub"?"https://github.com/Sigmayraffykaw/bruhwik":"#"}>{x}</a>)}</div><p>Independent community project. Not affiliated with Spotify AB.</p></footer>
+  </main>
 }
