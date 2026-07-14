@@ -48,13 +48,14 @@ export default function Home(){
   const [filter,setFilter]=useState("All");
   const [activeTheme,setActiveTheme]=useState(themes[0]);
   const [liked,setLiked]=useState<string[]>([]);
+  const [creator,setCreator]=useState({accent:"#35f27d",surface:"#111113",radius:18,glow:38,density:"Comfortable",name:"Midnight Pulse"});
   const filtered=useMemo(()=>themes.filter(t=>(filter==="All"||t.category===filter)&&(t.name+t.creator+t.category).toLowerCase().includes(query.toLowerCase())),[filter,query]);
   const categories=["All","Trending","Minimal","Anime","Gaming","Cyberpunk"];
 
   return <main id="top">
     <div className="grain"/><div className="orb orb-one"/><div className="orb orb-two"/>
-    <nav className="nav shell"><Brand/><div className="nav-links">{["Themes","Extensions","Creators","Download"].map(x=><a key={x} href={`#${x.toLowerCase()}`}>{x}</a>)}</div><div className="nav-actions"><a href="https://github.com/Sigmayraffykaw/bruhwik" className="ghost"><Github size={16}/>GitHub</a><a href="#download" className="button compact"><Download size={16}/>Download</a></div><button className="menu" onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button></nav>
-    <AnimatePresence>{menu&&<motion.div initial={{opacity:0,y:-8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-8}} className="mobile-nav">{["Themes","Extensions","Creators","Download"].map(x=><a onClick={()=>setMenu(false)} key={x} href={`#${x.toLowerCase()}`}>{x}</a>)}</motion.div>}</AnimatePresence>
+    <nav className="nav shell"><Brand/><div className="nav-links">{["Themes","Extensions","Creator","Creators","Download"].map(x=><a key={x} href={`#${x.toLowerCase()}`}>{x}</a>)}</div><div className="nav-actions"><a href="https://github.com/Sigmayraffykaw/bruhwik" className="ghost"><Github size={16}/>GitHub</a><a href="#download" className="button compact"><Download size={16}/>Download</a></div><button className="menu" onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button></nav>
+    <AnimatePresence>{menu&&<motion.div initial={{opacity:0,y:-8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-8}} className="mobile-nav">{["Themes","Extensions","Creator","Creators","Download"].map(x=><a onClick={()=>setMenu(false)} key={x} href={`#${x.toLowerCase()}`}>{x}</a>)}</motion.div>}</AnimatePresence>
 
     <section className="hero shell">
       <motion.div initial={{opacity:0,y:24}} animate={{opacity:1,y:0}} transition={{duration:.7}} className="hero-copy">
@@ -101,6 +102,22 @@ export default function Home(){
     </div></section>
 
     <section id="extensions" className="section shell"><div className="split-head"><div><div className="section-label">EXTENSIONS</div><h2>Small tools.<br/><em>Huge upgrades.</em></h2></div><p>Give Spotify new abilities without turning your setup into a mess.</p></div><div className="extension-grid">{extensions.map(({icon:Icon,title,text},i)=><motion.article whileHover={{scale:1.02}} key={title}><div className={`extension-visual visual-${i}`}><Icon/></div><div><h3>{title}</h3><p>{text}</p><span>Coming soon <ArrowRight/></span></div></motion.article>)}</div></section>
+
+
+    <section id="creator" className="section shell creator-studio">
+      <div className="creator-copy"><div className="section-label">LIVE CREATOR</div><h2>Build one theme.<br/><em>Watch it change instantly.</em></h2><p>Every control updates the preview in real time. No saving, refreshing, or rebuilding.</p><div className="creator-controls">
+        <label><span>Theme name</span><input value={creator.name} onChange={e=>setCreator({...creator,name:e.target.value})}/></label>
+        <div className="color-row"><label><span>Accent</span><input type="color" value={creator.accent} onChange={e=>setCreator({...creator,accent:e.target.value})}/></label><label><span>Surface</span><input type="color" value={creator.surface} onChange={e=>setCreator({...creator,surface:e.target.value})}/></label></div>
+        <label><span>Corner radius <b>{creator.radius}px</b></span><input type="range" min="4" max="32" value={creator.radius} onChange={e=>setCreator({...creator,radius:Number(e.target.value)})}/></label>
+        <label><span>Glow strength <b>{creator.glow}%</b></span><input type="range" min="0" max="100" value={creator.glow} onChange={e=>setCreator({...creator,glow:Number(e.target.value)})}/></label>
+        <div className="density"><span>Layout density</span>{["Compact","Comfortable","Spacious"].map(x=><button key={x} className={creator.density===x?"active":""} onClick={()=>setCreator({...creator,density:x})}>{x}</button>)}</div>
+        <button className="button creator-save" onClick={()=>{const blob=new Blob([JSON.stringify(creator,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`${creator.name.toLowerCase().replace(/\s+/g,"-")}.bruhwiks.json`;a.click();URL.revokeObjectURL(url)}}><Download size={17}/>Export theme</button>
+      </div></div>
+      <motion.div layout className={`creator-preview ${creator.density.toLowerCase()}`} style={{"--creator-accent":creator.accent,"--creator-surface":creator.surface,"--creator-radius":`${creator.radius}px`,"--creator-glow":`${creator.glow/100}`} as React.CSSProperties}>
+        <div className="creator-window"><div className="creator-top"><i/><i/><i/><span>BruhWiks Creator · Live</span><b>Saved</b></div><div className="creator-app"><aside><div className="creator-logo"><CirclePlay/></div>{["Home","Search","Library","Create"].map((x,i)=><div className={i===3?"selected":""} key={x}><span/>{x}</div>)}</aside><div className="creator-main"><header><div><small>LIVE PREVIEW</small><h3>{creator.name||"Untitled theme"}</h3></div><button>Publish</button></header><div className="creator-hero-card"><div><small>Made in BruhWiks</small><h4>Design without limits.</h4><p>Your controls are connected directly to this preview.</p></div><CirclePlay/></div><h5>Recently played</h5><div className="creator-albums">{["Neon Drive","After Dark","Soft Static","No Skips"].map((x,i)=><article key={x}><div className={`creator-art ca${i}`}/><b>{x}</b><small>BruhWiks session</small></article>)}</div><div className="creator-player"><div className="mini-cover"/><div><b>{creator.name||"Untitled theme"}</b><small>Live creator preview</small></div><div className="creator-progress"><i/></div><CirclePlay/></div></div></div></div>
+        <div className="live-badge"><span/>Updating in real time</div>
+      </motion.div>
+    </section>
 
     <section id="creators" className="creator-section"><div className="section shell creator-inner"><div><div className="section-label">FOR CREATORS</div><h2>Build the theme<br/>everyone remembers.</h2><p>Publish themes, ship updates, grow an audience and build your reputation from one creator dashboard.</p><div className="creator-points">{["Versioned releases","Live preview studio","Analytics and feedback","Community verification"].map(x=><span key={x}><Check/>{x}</span>)}</div><a className="button secondary" href="https://github.com/Sigmayraffykaw/bruhwik"><Github/>View source</a></div><div className="dashboard-card"><div className="dash-top"><span>Creator dashboard</span><div><i/><i/><i/></div></div><div className="dash-stats"><article><small>Total installs</small><b>128,402</b><em>+18.2%</em></article><article><small>Theme rating</small><b>4.9</b><em>Top 1%</em></article></div><div className="chart">{[35,48,44,61,57,72,79,91,84,100].map((h,i)=><i key={i} style={{height:`${h}%`}}/>)}</div><div className="dash-release"><div className="release-icon"><UploadCloud/></div><div><b>Nebula Bloom 2.4</b><span>Published successfully</span></div><BadgeCheck/></div></div></div></section>
 
