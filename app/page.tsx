@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Bell, ChevronLeft, ChevronRight, Heart, Home, Library, ListMusic,
@@ -29,14 +29,21 @@ const artists = [
   ["Northstar", "#36d49b"], ["Juno Skye", "#ffad4d"], ["Lumi", "#d66dff"]
 ];
 
-function Logo(){return <div className="logo"><span><Sparkles size={18}/></span>BruhWiks</div>}
+function Logo(){
+  return (
+    <div className="logo"><span><Sparkles size={18}/></span>BruhWiks</div>
+  );
+}
 
 export default function HomePage(){
   const [query,setQuery]=useState("");
   const [playing,setPlaying]=useState(false);
   const [liked,setLiked]=useState(false);
   const [menu,setMenu]=useState(false);
-  const filtered=useMemo(()=>tracks.filter(t=>(t.title+t.artist+t.album).toLowerCase().includes(query.toLowerCase())),[query]);
+  const filtered = tracks.filter((track) => {
+    const text = `${track.title} ${track.artist} ${track.album}`.toLowerCase();
+    return text.includes(query.toLowerCase());
+  });
 
   return <main className="app-shell">
     <aside className={`sidebar ${menu?"open":""}`}>
