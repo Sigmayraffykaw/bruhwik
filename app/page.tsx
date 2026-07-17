@@ -1,61 +1,155 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Home, Search, Library, Plus, Heart, ChevronLeft, ChevronRight, Play, Pause, SkipBack, SkipForward, Repeat2, Shuffle, Volume2, Maximize2, ListMusic, Menu, X } from "lucide-react";
+import {
+  ArrowRight, Bell, ChevronLeft, ChevronRight, Disc3, Headphones, Heart,
+  Home, Library, ListMusic, Menu, Mic2, MoreHorizontal, Pause, Play,
+  Plus, Radio, Repeat2, Search, Shuffle, SkipBack, SkipForward, Sparkles,
+  Users, Volume2, Wand2, X, Zap
+} from "lucide-react";
 
-const quick = [
-  ["Liked Songs","linear-gradient(135deg,#450af5,#c4efd9)"],
-  ["Daily Mix 1","linear-gradient(135deg,#1f4037,#99f2c8)"],
-  ["On Repeat","linear-gradient(135deg,#5f2c82,#49a09d)"],
-  ["Chill Hits","linear-gradient(135deg,#0f2027,#2c5364)"],
-  ["Discover Weekly","linear-gradient(135deg,#ff9966,#ff5e62)"],
-  ["Release Radar","linear-gradient(135deg,#232526,#414345)"]
+const worlds = [
+  { name: "Neon Rain", tag: "late-night alt pop", hue: "violet", glyph: "✦" },
+  { name: "Zero Gravity", tag: "floating electronic", hue: "cyan", glyph: "◌" },
+  { name: "Velvet Heat", tag: "slow-burn R&B", hue: "coral", glyph: "◐" },
+  { name: "Digital Bloom", tag: "hyperpop & future bass", hue: "lime", glyph: "✺" },
 ];
-const cards = [
-  ["Daily Mix 1","Astra Vale, Kairo, Mila Rose and more","linear-gradient(135deg,#1db954,#164a2d)"],
-  ["Night Drive","Synthwave and neon pop for late hours","linear-gradient(135deg,#5b2cff,#0e0e2c)"],
-  ["Soft Focus","Warm electronic music for deep focus","linear-gradient(135deg,#f7971e,#ffd200)"],
-  ["Hyperpop Now","The biggest hyperpop tracks right now","linear-gradient(135deg,#ff2d95,#7a2cff)"],
-  ["Bedroom Pop","Dreamy, personal and low-key pop","linear-gradient(135deg,#8ec5fc,#e0c3fc)"],
-  ["Fresh Finds","Independent tracks picked for you","linear-gradient(135deg,#00c6ff,#0072ff)"]
+
+const releases = [
+  { title: "Night Bloom", artist: "Astra Vale", meta: "Album · 2026", tone: "one" },
+  { title: "Chrome Hearts", artist: "Kairo", meta: "EP · 6 tracks", tone: "two" },
+  { title: "Soft Collision", artist: "Mila Rose", meta: "Single · New", tone: "three" },
+  { title: "Static Dreams", artist: "Northstar", meta: "Album · 2026", tone: "four" },
+  { title: "Ultraviolet", artist: "Lumi", meta: "Album · 2025", tone: "five" },
 ];
+
 const tracks = [
-  ["Neon Hearts","Astra Vale","Night Bloom","3:42","#6d4aff"],
-  ["Out of Orbit","Kairo","Zero Gravity","2:58","#ff4d8d"],
-  ["Silverline","Mila Rose","Silverline","3:21","#47c7ff"],
-  ["No Signal","Northstar","Static Dreams","4:03","#23d18b"],
-  ["Gravity","Juno Skye","Motion","3:35","#ff9e3d"]
+  { title: "Neon Hearts", artist: "Astra Vale", album: "Night Bloom", time: "3:42", tone: "one" },
+  { title: "Out of Orbit", artist: "Kairo", album: "Chrome Hearts", time: "2:58", tone: "two" },
+  { title: "Silverline", artist: "Mila Rose", album: "Soft Collision", time: "3:21", tone: "three" },
+  { title: "No Signal", artist: "Northstar", album: "Static Dreams", time: "4:03", tone: "four" },
 ];
 
-export default function HomePage(){
-  const [playing,setPlaying]=useState(false);
-  const [query,setQuery]=useState("");
-  const [menu,setMenu]=useState(false);
-  const filtered=useMemo(()=>tracks.filter(t=>t.slice(0,3).join(" ").toLowerCase().includes(query.toLowerCase())),[query]);
-  return <main className="spotify-app">
-    <aside className={menu?"sidebar open":"sidebar"}>
-      <button className="close" onClick={()=>setMenu(false)}><X/></button>
-      <div className="side-card nav-card">
-        <div className="brand"><span>●</span> BruhWiks</div>
-        <a className="active"><Home/>Home</a><a><Search/>Search</a>
-      </div>
-      <div className="side-card library-card">
-        <div className="library-head"><span><Library/>Your Library</span><button><Plus/></button></div>
-        <div className="chips"><button>Playlists</button><button>Artists</button></div>
-        <div className="library-search"><Search size={17}/><span>Recents</span></div>
-        {["Liked Songs","Discover Weekly","Release Radar","Night Drive","Chill Hits","Daily Mix 1"].map((x,i)=><div className="lib-item" key={x}><div className="lib-cover" style={{background:quick[i%quick.length][1]}}>{i===0?<Heart size={18}/>:null}</div><div><b>{x}</b><small>{i===0?"Playlist • 42 songs":"Playlist • BruhWiks"}</small></div></div>)}
-      </div>
-    </aside>
-    <section className="main-panel">
-      <header className="topbar"><button className="menu" onClick={()=>setMenu(true)}><Menu/></button><div className="arrows"><button><ChevronLeft/></button><button><ChevronRight/></button></div><label><Search/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="What do you want to play?"/></label><div className="profile">J</div></header>
-      <div className="hero-gradient"><h1>Good evening</h1><div className="quick-grid">{quick.map(([name,bg])=><button key={name}><span style={{background:bg}}></span><b>{name}</b><i><Play fill="currentColor"/></i></button>)}</div></div>
-      <div className="content-wrap">
-        <div className="section-title"><h2>Made for Jade</h2><button>Show all</button></div>
-        <div className="card-grid">{cards.map(([name,desc,bg])=><article key={name}><div className="card-art" style={{background:bg}}><button onClick={()=>setPlaying(true)}><Play fill="currentColor"/></button></div><h3>{name}</h3><p>{desc}</p></article>)}</div>
-        <div className="section-title"><h2>Jump back in</h2><button>Show all</button></div>
-        <div className="track-list">{filtered.map((t,i)=><div className="track" key={t[0]}><span className="num">{i+1}</span><div className="mini-art" style={{background:t[4]}}></div><div className="track-main"><b>{t[0]}</b><small>{t[1]}</small></div><span className="album">{t[2]}</span><span>{t[3]}</span></div>)}</div>
-      </div>
-    </section>
-    <footer className="player"><div className="now"><div className="now-art"></div><div><b>Neon Hearts</b><small>Astra Vale</small></div><Heart size={18}/></div><div className="controls"><div><Shuffle/><SkipBack/><button onClick={()=>setPlaying(!playing)}>{playing?<Pause fill="currentColor"/>:<Play fill="currentColor"/>}</button><SkipForward/><Repeat2/></div><section><span>1:12</span><i><em></em></i><span>3:42</span></section></div><div className="extras"><ListMusic/><Volume2/><i><em></em></i><Maximize2/></div></footer>
-  </main>
+export default function HomePage() {
+  const [playing, setPlaying] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [menu, setMenu] = useState(false);
+  const [query, setQuery] = useState("");
+  const [activeWorld, setActiveWorld] = useState(0);
+
+  const filtered = useMemo(() => tracks.filter((track) =>
+    `${track.title} ${track.artist} ${track.album}`.toLowerCase().includes(query.toLowerCase())
+  ), [query]);
+
+  return (
+    <main className="shell">
+      <div className="ambient ambient-a" />
+      <div className="ambient ambient-b" />
+      <div className="grain" />
+
+      <aside className={`rail ${menu ? "show" : ""}`}>
+        <div className="brand-row">
+          <div className="brand-mark"><Disc3 /></div>
+          <div><strong>BruhWiks</strong><span>music, reimagined</span></div>
+          <button className="rail-close" onClick={() => setMenu(false)}><X /></button>
+        </div>
+
+        <nav className="main-nav">
+          <button className="active"><Home />Home</button>
+          <button><Sparkles />Discover</button>
+          <button><Radio />Live</button>
+          <button><Library />Collection</button>
+        </nav>
+
+        <div className="nav-label">YOUR SPACE</div>
+        <nav className="mini-nav">
+          <button><Heart />Favourites</button>
+          <button><ListMusic />Playlists</button>
+          <button><Mic2 />Artists</button>
+          <button><Users />Rooms</button>
+        </nav>
+
+        <button className="create-mix"><Plus /><span><b>Create a mix</b><small>Blend tracks, moods and friends</small></span></button>
+
+        <div className="profile-card">
+          <div className="avatar">J</div>
+          <div><b>Jade</b><small>Pulse member</small></div>
+          <MoreHorizontal />
+        </div>
+      </aside>
+
+      <section className="stage">
+        <header className="topbar">
+          <button className="mobile-menu" onClick={() => setMenu(true)}><Menu /></button>
+          <div className="history"><button><ChevronLeft /></button><button><ChevronRight /></button></div>
+          <label className="search-box"><Search /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search the BruhWiks universe" /></label>
+          <div className="top-actions"><button><Bell /></button><div className="top-avatar">J</div></div>
+        </header>
+
+        <div className="content">
+          <section className="hero">
+            <div className="hero-copy">
+              <div className="eyebrow"><Zap />BRUHWIKS EXCLUSIVE</div>
+              <h1>Hear music<br/><em>in colour.</em></h1>
+              <p>A living music space shaped by your taste, your mood and the people listening with you.</p>
+              <div className="hero-actions">
+                <button className="primary" onClick={() => setPlaying(!playing)}>{playing ? <Pause /> : <Play fill="currentColor" />}Play Night Bloom</button>
+                <button className="secondary"><Heart />Save release</button>
+              </div>
+              <div className="hero-meta"><span>ASTRA VALE</span><i />12 TRACKS<i />IMMERSIVE AUDIO</div>
+            </div>
+            <div className="hero-art">
+              <div className="orbit orbit-1"/><div className="orbit orbit-2"/><div className="planet"><div className="planet-core">AV</div></div>
+              <div className="float-card fc-one"><Sparkles/><span><b>98% match</b><small>Built for your taste</small></span></div>
+              <div className="float-card fc-two"><Headphones/><span><b>4.2M listeners</b><small>Trending worldwide</small></span></div>
+            </div>
+          </section>
+
+          <section className="section-block">
+            <div className="section-head"><div><span className="kicker">CHOOSE A FEELING</span><h2>Enter a sound world</h2></div><button>View all <ArrowRight /></button></div>
+            <div className="world-grid">
+              {worlds.map((world, index) => <button key={world.name} className={`world-card ${world.hue} ${activeWorld === index ? "selected" : ""}`} onClick={() => setActiveWorld(index)}>
+                <span className="world-glyph">{world.glyph}</span><div><b>{world.name}</b><small>{world.tag}</small></div><ArrowRight />
+              </button>)}
+            </div>
+          </section>
+
+          <section className="section-block">
+            <div className="section-head"><div><span className="kicker">CURATED FOR JADE</span><h2>Fresh from your orbit</h2></div><button>See everything <ArrowRight /></button></div>
+            <div className="release-grid">
+              {releases.map((item) => <article className="release-card" key={item.title}>
+                <div className={`cover ${item.tone}`}><div className="cover-glow"/><span>{item.title.slice(0,2).toUpperCase()}</span><button onClick={() => setPlaying(true)}><Play fill="currentColor" /></button></div>
+                <h3>{item.title}</h3><p>{item.artist}</p><small>{item.meta}</small>
+              </article>)}
+            </div>
+          </section>
+
+          <section className="split-grid">
+            <div className="track-panel">
+              <div className="section-head compact"><div><span className="kicker">MOVING FAST</span><h2>Pulse chart</h2></div><button><MoreHorizontal /></button></div>
+              <div className="track-list">
+                {(query ? filtered : tracks).map((track, index) => <button className="track-row" key={track.title} onClick={() => setPlaying(true)}>
+                  <span className="track-index">0{index + 1}</span><div className={`track-cover ${track.tone}`}><Play fill="currentColor" /></div>
+                  <div className="track-copy"><b>{track.title}</b><small>{track.artist}</small></div><span className="album-name">{track.album}</span><Heart/><time>{track.time}</time><MoreHorizontal/>
+                </button>)}
+              </div>
+            </div>
+
+            <aside className="room-card">
+              <div className="room-visual"><span className="wave w1"/><span className="wave w2"/><span className="wave w3"/><span className="wave w4"/><div className="room-badge"><Users/>128 live</div></div>
+              <span className="kicker">LISTEN TOGETHER</span><h2>Midnight Room</h2><p>A live mix of dark pop, R&B and electronic picked by everyone inside.</p>
+              <div className="listeners"><span>J</span><span>A</span><span>K</span><span>M</span><small>+124</small></div>
+              <button className="join-room"><Radio />Join the room</button>
+            </aside>
+          </section>
+        </div>
+      </section>
+
+      <footer className="player">
+        <div className="now-playing"><div className="mini-cover one">NB</div><div><b>Neon Hearts</b><small>Astra Vale · Night Bloom</small></div><button className={liked ? "liked" : ""} onClick={() => setLiked(!liked)}><Heart fill={liked ? "currentColor" : "none"}/></button></div>
+        <div className="player-center"><div className="controls"><button><Shuffle/></button><button><SkipBack/></button><button className="main-play" onClick={() => setPlaying(!playing)}>{playing ? <Pause fill="currentColor"/> : <Play fill="currentColor"/>}</button><button><SkipForward/></button><button><Repeat2/></button></div><div className="progress"><span>1:18</span><div><i /></div><span>3:42</span></div></div>
+        <div className="player-right"><button><Wand2/></button><button><ListMusic/></button><Volume2/><div className="volume"><i/></div></div>
+      </footer>
+    </main>
+  );
 }

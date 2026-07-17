@@ -1,1 +1,11 @@
-import "./globals.css"; import type { Metadata } from "next"; export const metadata:Metadata={title:"BruhWiks Music",description:"A premium music streaming experience."}; export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="en"><body>{children}</body></html>}
+import type { Metadata } from "next";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  title: "BruhWiks Pulse — Hear Music in Colour",
+  description: "An original immersive music experience built around mood, discovery and listening together.",
+};
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return <html lang="en"><body>{children}</body></html>;
+}
