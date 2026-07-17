@@ -1,0 +1,8 @@
+
+"use client";
+import {useState} from "react";
+import {MusicShell} from "../components/MusicShell";
+import {Headphones,MessageCircle,Mic2,Play,Send,Users} from "lucide-react";
+import s from "../components/music.module.css";
+const rooms=["Midnight Drive","Afterglow Club","Indie Orbit","Focus Lab"];
+export default function Rooms(){const[active,setActive]=useState(0);const[msg,setMsg]=useState("");const[chats,setChats]=useState(["Mila: this drop is perfect","Kairo: adding this to my playlist"]);return <MusicShell><header className={s.socialIntro}><span><Headphones/> LIVE TOGETHER</span><h1>Listening rooms</h1><p>Join friends, chat live and hear every beat at the same time.</p></header><div className={s.roomsGrid}><aside>{rooms.map((r,i)=><button className={active===i?s.roomActive:""} onClick={()=>setActive(i)} key={r}><span>{r.slice(0,2)}</span><div><b>{r}</b><small>{38+i*17} listening</small></div></button>)}</aside><section className={s.roomStage}><div className={s.roomArt}>NB<i/><b>LIVE</b></div><span>NOW PLAYING</span><h2>Neon Hearts</h2><p>Astra Vale · Night Bloom</p><div className={s.roomControls}><button><Play fill="currentColor"/></button><button><Mic2/></button><button><Users/> Invite</button></div><div className={s.listenerStack}>{["J","M","K","L","N"].map(x=><span key={x}>{x}</span>)}<small>+43</small></div></section><section className={s.chatPanel}><h3><MessageCircle/> Room chat</h3><div>{chats.map(c=><p key={c}>{c}</p>)}</div><form onSubmit={e=>{e.preventDefault();if(msg.trim()){setChats([...chats,"Jade: "+msg]);setMsg("")}}}><input value={msg} onChange={e=>setMsg(e.target.value)} placeholder="Say something..."/><button><Send/></button></form></section></div></MusicShell>}

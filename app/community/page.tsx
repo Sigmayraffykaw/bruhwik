@@ -1,0 +1,9 @@
+
+"use client";
+import {useState} from "react";
+import Link from "next/link";
+import {MusicShell} from "../components/MusicShell";
+import {Heart,MessageCircle,Share2,UserPlus,Users} from "lucide-react";
+import s from "../components/music.module.css";
+const posts=[{u:"Mila Rose",t:"This chorus has been stuck in my head all day.",song:"Silverline"},{u:"Kairo",t:"Made a mix for late-night coding. Add anything that fits.",song:"Zero Gravity"},{u:"Lumi",t:"Anyone joining the Afterglow room tonight?",song:"Velvet Signal"}];
+export default function Community(){const[likes,setLikes]=useState([42,71,18]);return <MusicShell><header className={s.socialIntro}><span><Users/> BRUHWIKS SOCIAL</span><h1>Your music people.</h1><p>See what friends are playing, share discoveries and build playlists together.</p></header><div className={s.communityLayout}><section className={s.socialFeed}>{posts.map((p,i)=><article className={s.post} key={p.u}><div className={s.postUser}><span>{p.u[0]}</span><div><b>{p.u}</b><small>{i+2} minutes ago</small></div><button><UserPlus/></button></div><p>{p.t}</p><Link href="/album/night-bloom" className={s.sharedSong}><span>{p.song.slice(0,2).toUpperCase()}</span><div><b>{p.song}</b><small>Astra Vale · Night Bloom</small></div></Link><div className={s.postActions}><button onClick={()=>setLikes(v=>v.map((n,j)=>j===i?n+1:n))}><Heart/> {likes[i]}</button><button><MessageCircle/> {i+3}</button><button><Share2/> Share</button></div></article>)}</section><aside className={s.socialAside}><h3>People to follow</h3>{["Noah K","Mia V","Ari Lane","Zee"].map((n,i)=><div className={s.personRow} key={n}><span>{n[0]}</span><div><b>{n}</b><small>{12+i*4} mutuals</small></div><button>Follow</button></div>)}<Link href="/rooms" className={s.roomPromo}><b>3 rooms live now</b><small>Listen together in real time</small></Link></aside></div></MusicShell>}
