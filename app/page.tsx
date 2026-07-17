@@ -71,11 +71,11 @@ export default function HomePage() {
 
         <button className="create-mix"><Plus /><span><b>Create a mix</b><small>Blend tracks, moods and friends</small></span></button>
 
-        <div className="profile-card">
+        <a href="/login" className="profile-card" style={{textDecoration:"none",color:"inherit"}}>
           <div className="avatar">J</div>
           <div><b>Jade</b><small>Pulse member</small></div>
           <MoreHorizontal />
-        </div>
+        </a>
       </aside>
 
       <section className="stage">
@@ -83,7 +83,7 @@ export default function HomePage() {
           <button className="mobile-menu" onClick={() => setMenu(true)}><Menu /></button>
           <div className="history"><button><ChevronLeft /></button><button><ChevronRight /></button></div>
           <label className="search-box"><Search /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search the BruhWiks universe" /></label>
-          <div className="top-actions"><button><Bell /></button><div className="top-avatar">J</div></div>
+          <div className="top-actions"><button><Bell /></button><a href="/login" className="top-avatar" style={{textDecoration:"none",color:"inherit"}}>J</a></div>
         </header>
 
         <div className="content">
