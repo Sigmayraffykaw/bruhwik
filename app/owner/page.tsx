@@ -1,0 +1,1 @@
+import OwnerDashboard from "./OwnerDashboard"; export const metadata={title:"Owner Dashboard — BruhWiks"}; export default function OwnerPage(){return <OwnerDashboard/>}
