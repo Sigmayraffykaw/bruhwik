@@ -1,31 +1,82 @@
 "use client";
-import {useMemo,useState} from "react";
-import {motion} from "framer-motion";
-import {ArrowRight,Check,ChevronDown,Download,Github,Heart,Layers3,Menu,Monitor,Palette,Play,Search,Sparkles,Terminal,WandSparkles,X,Zap,AppWindow,Keyboard,Music2,BarChart3,Library} from "lucide-react";
-const themes=[
-{name:"Midnight Bloom",by:"nova.exe",tag:"Trending",downloads:"84K",likes:"21K",bg:"linear-gradient(135deg,#171026,#8b5cf6 55%,#ec4899)"},
-{name:"OLED Pure",by:"mika",tag:"OLED",downloads:"73K",likes:"19K",bg:"linear-gradient(135deg,#000,#0f172a 55%,#1ed760)"},
-{name:"Cyberdrive",by:"zero",tag:"Cyberpunk",downloads:"58K",likes:"15K",bg:"linear-gradient(135deg,#07152a,#0066ff 45%,#ff008c)"},
-{name:"Sakura Glass",by:"kyomi",tag:"Anime",downloads:"47K",likes:"13K",bg:"linear-gradient(135deg,#24101d,#fb5ca8 55%,#ffe1ec)"},
-{name:"Nord Minimal",by:"arthur",tag:"Minimal",downloads:"42K",likes:"11K",bg:"linear-gradient(135deg,#0f1720,#334155 55%,#94a3b8)"},
-{name:"RGB Overdrive",by:"flux",tag:"Gaming",downloads:"39K",likes:"10K",bg:"linear-gradient(135deg,#06150f,#6d28d9 35%,#00e5ff 68%,#ff2d55)"}
+
+import { useMemo, useState } from "react";
+import { motion } from "framer-motion";
+import {
+  Bell, ChevronLeft, ChevronRight, Heart, Home, Library, ListMusic,
+  Menu, MoreHorizontal, Pause, Play, Plus, Radio, Repeat2, Search,
+  Shuffle, SkipBack, SkipForward, Sparkles, Volume2, X
+} from "lucide-react";
+
+const mixes = [
+  { title: "Midnight Drive", subtitle: "Synthwave, alt-pop and neon energy", art: "linear-gradient(135deg,#5926ff,#00d4ff)" },
+  { title: "Main Character", subtitle: "Big hooks and unstoppable confidence", art: "linear-gradient(135deg,#ff2d75,#ff9b42)" },
+  { title: "After Hours", subtitle: "Late-night R&B and slow motion beats", art: "linear-gradient(135deg,#101522,#7647ff)" },
+  { title: "Hyper Focus", subtitle: "Electronic focus without distractions", art: "linear-gradient(135deg,#02b875,#073b4c)" },
+  { title: "Cloud Nine", subtitle: "Dream pop, indie and soft electronic", art: "linear-gradient(135deg,#8cc8ff,#f7a8ff)" },
 ];
-const filters=["Popular","Trending","Minimal","Anime","Gaming","OLED","Cyberpunk","RGB"];
-const extensions=[[Keyboard,"Shortcut Pro","Advanced controls and faster navigation."],[Music2,"Ambient Player","Immersive full-screen listening mode."],[BarChart3,"Stats Plus","Listening analytics inside Spotify."],[Library,"Library Tools","Organize playlists and saved music."],[Search,"Quick Search","Find anything with a command palette."],[Layers3,"Queue Master","Smarter queue controls and saved queues."]];
-const faq=[["Is BruhWiks free?","Yes. BruhWiks is planned as a free community platform."],["Is it safe?","The project will use transparent code and verified releases."],["Does it work on mobile?","No. BruhWiks is built for desktop Spotify."],["Can I make themes?","Yes. Theme creation and publishing are core features."],["How do updates work?","Spotify updates may require customizations to be reapplied."]];
-function Brand(){return <a href="#top" className="brand"><span><WandSparkles/></span>BruhWiks<b>.</b></a>}
-export default function Home(){const[menu,setMenu]=useState(false),[query,setQuery]=useState(""),[filter,setFilter]=useState("Popular"),[liked,setLiked]=useState<string[]>([]),[active,setActive]=useState(themes[0]);const visible=useMemo(()=>themes.filter(t=>(filter==="Popular"||t.tag===filter)&&(t.name+t.by+t.tag).toLowerCase().includes(query.toLowerCase())),[filter,query]);return <main id="top"><div className="grain"/><div className="orb one"/><div className="orb two"/>
-<nav className="nav shell"><Brand/><div className="links">{["Themes","Extensions","Apps","Community","Download"].map(x=><a key={x} href={`#${x.toLowerCase()}`}>{x}</a>)}</div><div className="actions"><a className="ghost" href="https://github.com/Sigmayraffykaw/bruhwik"><Github/>GitHub</a><a className="primary small" href="#download"><Download/>Download</a></div><button className="menubtn" onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button></nav>{menu&&<div className="mobile">{["Themes","Extensions","Apps","Community","Download"].map(x=><a onClick={()=>setMenu(false)} key={x} href={`#${x.toLowerCase()}`}>{x}</a>)}</div>}
-<section className="hero shell"><motion.div initial={{opacity:0,y:25}} animate={{opacity:1,y:0}} className="herocopy"><div className="pill"><i/>Built for desktop Spotify</div><h1>Customize Spotify<br/><em>Without Limits.</em></h1><p>Build your own Spotify experience with beautiful themes, powerful extensions, custom apps, and community creations.</p><div className="heroactions"><a className="primary" href="#download"><Download/>Download</a><a className="secondary" href="#themes"><Sparkles/>Browse Themes</a></div><div className="trust"><span><Check/>Free & open</span><span><Check/>Desktop focused</span><span><Check/>Community built</span></div></motion.div>
-<motion.div initial={{opacity:0,scale:.93}} animate={{opacity:1,scale:1}} className="mock"><div className="title"><i/><i/><i/><span>BruhWiks Preview</span></div><div className="spotify"><aside><Brand/><p>Home</p><p>Search</p><p>Your Library</p></aside><section><small>GOOD EVENING</small><h3>Your universe</h3><div className="banner" style={{background:active.bg}}><b>{active.name}</b><button><Play fill="currentColor"/></button></div><div className="albums">{["Neon nights","Dream state","No skips","Night drive"].map((x,i)=><article key={x}><div className={`cover c${i}`}/><b>{x}</b><small>Made for you</small></article>)}</div><div className="player"><div/><span><b>Afterglow</b><small>BruhWiks Sessions</small></span><i/><Play fill="currentColor"/></div></section></div></motion.div></section>
-<div className="ticker">{["THEMES","EXTENSIONS","CUSTOM APPS","OLED READY","CREATOR FIRST","FAST UPDATES"].map(x=><span key={x}>{x}<Sparkles/></span>)}</div>
-<section className="section shell intro"><div className="label">WHAT IS BRUHWIKS?</div><div className="twocol"><h2>Your Spotify.<br/><em>Your rules.</em></h2><div><p>BruhWiks is a modern platform for Spotify desktop customization. It brings themes, extensions and apps together in one polished experience.</p><p>Inspired by Spicetify, it enhances desktop Spotify while making discovery, setup and personalization easier.</p></div></div></section>
-<section className="section shell"><div className="label">CORE EXPERIENCE</div><h2>Everything you need.<br/><em>Nothing you don’t.</em></h2><div className="featuregrid"><article><Palette/><h3>Beautiful Themes</h3><p>Change colors, fonts, layouts, backgrounds, transparency and corners.</p></article><article><Zap/><h3>Extensions</h3><p>Add shortcuts, lyrics, ambient modes, queue tools and better navigation.</p></article><article><AppWindow/><h3>Custom Apps</h3><p>Add playlist managers, statistics, library tools and discovery pages.</p></article></div></section>
-<section id="themes" className="market"><div className="section shell"><div className="label">THEME MARKETPLACE</div><h2>Find your new vibe.</h2><label className="search"><Search/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search themes or creators..."/></label><div className="filters">{filters.map(x=><button className={filter===x?"on":""} onClick={()=>setFilter(x)} key={x}>{x}</button>)}</div><div className="themegrid">{visible.map(t=><motion.article whileHover={{y:-7}} key={t.name}><button className={`like ${liked.includes(t.name)?"on":""}`} onClick={()=>setLiked(v=>v.includes(t.name)?v.filter(x=>x!==t.name):[...v,t.name])}><Heart fill={liked.includes(t.name)?"currentColor":"none"}/></button><button className="image" style={{background:t.bg}} onClick={()=>setActive(t)}><span>{t.tag}</span><div><i/><i/><i/></div></button><section><h3>{t.name}</h3><p>by {t.by}</p><button onClick={()=>setActive(t)}>Preview</button></section><footer><span><Download/>{t.downloads}</span><span><Heart/>{t.likes}</span></footer></motion.article>)}</div></div></section>
-<section id="extensions" className="section shell"><div className="label">EXTENSION GALLERY</div><h2>Spotify, but smarter.</h2><div className="extensions">{extensions.map(([Icon,n,d]:any)=><article key={n}><Icon/><div><h3>{n}</h3><p>{d}</p></div><button>Install <ArrowRight/></button></article>)}</div></section>
-<section id="apps" className="section shell apps"><div><div className="label">CUSTOM APPS</div><h2>Entirely new pages.<br/><em>Inside Spotify.</em></h2><p>Playlist Manager, Listening Statistics, Library Organizer, Theme Manager, Quick Search and Music Discovery.</p></div><div className="appmock"><div className="appstats"><article><small>Minutes listened</small><b>42,810</b></article><article><small>Top genre</small><b>Alt Pop</b></article></div><div className="chart">{[35,48,44,61,57,72,79,91,84,100].map((h,i)=><i key={i} style={{height:`${h}%`}}/>)}</div></div></section>
-<section id="community" className="community"><div className="section shell twocol"><div><div className="label">BUILT TOGETHER</div><h2>A community for<br/>people who care.</h2></div><div className="stats">{[["250,000+","Downloads"],["12,000+","Themes"],["3,500+","Extensions"],["1,000,000+","Installs"]].map(([n,l])=><article key={l}><b>{n}</b><span>{l}</span></article>)}</div></div></section>
-<section className="section shell technical"><article><Monitor/><h3>Desktop Only</h3><p>Works with Spotify desktop on Windows, macOS and Linux. Mobile is not supported.</p></article><article><Download/><h3>Update Friendly</h3><p>Spotify updates may overwrite customizations. BruhWiks makes reapplying simple.</p></article></section>
-<section id="download" className="download"><div className="section shell"><div className="downloadicon"><Monitor/></div><div className="label">DOWNLOAD BRUHWIKS</div><h2>Choose your platform.</h2><p>Preview setup guides are available while the signed desktop client is being developed.</p><div className="platforms"><button><Monitor/><span><b>Windows</b><small>Windows 10+</small></span><Download/></button><button><AppWindow/><span><b>macOS</b><small>macOS 12+</small></span><Download/></button><button><Terminal/><span><b>Linux</b><small>Most distros</small></span><Download/></button></div></div></section>
-<section className="section shell faq"><div className="label">FAQ</div><h2>Questions, answered.</h2>{faq.map(([q,a])=><details key={q}><summary>{q}<ChevronDown/></summary><p>{a}</p></details>)}</section>
-<footer className="sitefooter shell"><Brand/><div>{["Themes","Extensions","Documentation","GitHub","Discord","Privacy","Terms"].map(x=><a key={x} href={x==="GitHub"?"https://github.com/Sigmayraffykaw/bruhwik":"#"}>{x}</a>)}</div><p>Independent project. Not affiliated with Spotify AB.</p></footer></main>}
+
+const tracks = [
+  { title: "Neon Hearts", artist: "Astra Vale", album: "Night Bloom", time: "3:42", color: "#6d4aff" },
+  { title: "Out of Orbit", artist: "Kairo", album: "Zero Gravity", time: "2:58", color: "#ff4d8d" },
+  { title: "Silverline", artist: "Mila Rose", album: "Silverline", time: "3:21", color: "#47c7ff" },
+  { title: "No Signal", artist: "Northstar", album: "Static Dreams", time: "4:03", color: "#23d18b" },
+  { title: "Gravity", artist: "Juno Skye", album: "Motion", time: "3:35", color: "#ff9e3d" },
+];
+
+const artists = [
+  ["Astra Vale", "#775cff"], ["Kairo", "#ff457d"], ["Mila Rose", "#53c9ff"],
+  ["Northstar", "#36d49b"], ["Juno Skye", "#ffad4d"], ["Lumi", "#d66dff"]
+];
+
+function Logo(){return <div className="logo"><span><Sparkles size={18}/></span>BruhWiks</div>}
+
+export default function HomePage(){
+  const [query,setQuery]=useState("");
+  const [playing,setPlaying]=useState(false);
+  const [liked,setLiked]=useState(false);
+  const [menu,setMenu]=useState(false);
+  const filtered=useMemo(()=>tracks.filter(t=>(t.title+t.artist+t.album).toLowerCase().includes(query.toLowerCase())),[query]);
+
+  return <main className="app-shell">
+    <aside className={`sidebar ${menu?"open":""}`}>
+      <div className="side-top"><Logo/><button className="close-side" onClick={()=>setMenu(false)}><X/></button></div>
+      <nav>
+        <a className="active"><Home/>Home</a><a><Search/>Explore</a><a><Radio/>Stations</a>
+      </nav>
+      <div className="side-label">YOUR MUSIC</div>
+      <nav><a><Library/>Library</a><a><Heart/>Liked Songs</a><a><ListMusic/>Playlists</a></nav>
+      <div className="playlist-create"><button><Plus/></button><div><b>Create playlist</b><small>Build your next soundtrack</small></div></div>
+      <div className="side-footer"><span className="avatar">J</span><div><b>Jade</b><small>Premium listener</small></div><MoreHorizontal/></div>
+    </aside>
+
+    <section className="content">
+      <header className="topbar">
+        <button className="mobile-menu" onClick={()=>setMenu(true)}><Menu/></button>
+        <div className="history"><button><ChevronLeft/></button><button><ChevronRight/></button></div>
+        <label className="search"><Search/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search songs, artists, albums and playlists"/></label>
+        <div className="top-actions"><button><Bell/></button><span className="avatar">J</span></div>
+      </header>
+
+      <div className="page">
+        <motion.section className="hero" initial={{opacity:0,y:18}} animate={{opacity:1,y:0}}>
+          <div className="hero-glow one"/><div className="hero-glow two"/>
+          <div className="hero-copy"><span className="eyebrow">BRUHWIKS ORIGINAL</span><h1>Music for every version of you.</h1><p>Millions of songs, hand-picked mixes, live stations and albums in one beautifully simple place.</p><div><button className="primary" onClick={()=>setPlaying(true)}><Play fill="currentColor"/>Play now</button><button className="secondary"><Plus/>Add to library</button></div></div>
+          <div className="hero-art"><div className="disc"><i/><span>BW</span></div><div className="cover"><small>EXCLUSIVE MIX</small><b>AFTER<br/>DARK</b><em>BruhWiks Music</em></div></div>
+        </motion.section>
+
+        <section className="section-block"><div className="section-head"><div><span>MADE FOR YOU</span><h2>Your daily rotation</h2></div><button>See all</button></div><div className="card-grid">{mixes.map((m,i)=><motion.article className="music-card" whileHover={{y:-7}} key={m.title}><div className="cover-art" style={{background:m.art}}><div className="art-noise"/><b>{String(i+1).padStart(2,"0")}</b><button onClick={()=>setPlaying(true)}><Play fill="currentColor"/></div><h3>{m.title}</h3><p>{m.subtitle}</p></motion.article>)}</div></section>
+
+        <section className="section-block"><div className="section-head"><div><span>TRENDING NOW</span><h2>Top tracks</h2></div><button>View chart</button></div><div className="track-table"><div className="track-head"><span>#</span><span>Title</span><span>Album</span><span>Time</span></div>{filtered.map((t,i)=><div className="track-row" key={t.title}><span>{i+1}</span><div className="track-title"><i style={{background:t.color}}>{t.title.charAt(0)}</i><div><b>{t.title}</b><small>{t.artist}</small></div></div><span>{t.album}</span><span>{t.time}</span><button onClick={()=>setPlaying(true)}><Play size={16} fill="currentColor"/></button></div>)}</div></section>
+
+        <section className="section-block"><div className="section-head"><div><span>ARTISTS YOU LOVE</span><h2>Popular artists</h2></div><button>See all</button></div><div className="artist-grid">{artists.map(([name,color])=><article key={name}><div className="artist-photo" style={{background:`radial-gradient(circle at 35% 25%,#fff8,transparent 16%),linear-gradient(145deg,${color},#111)`}}><span>{name.split(" ").map(x=>x[0]).join("")}</span></div><h3>{name}</h3><p>Artist</p></article>)}</div></section>
+      </div>
+    </section>
+
+    <div className="player">
+      <div className="now"><div className="mini-cover">N</div><div><b>Neon Hearts</b><small>Astra Vale</small></div><button onClick={()=>setLiked(!liked)} className={liked?"liked":""}><Heart fill={liked?"currentColor":"none"}/></button></div>
+      <div className="controls"><div><button><Shuffle/></button><button><SkipBack/></button><button className="play-main" onClick={()=>setPlaying(!playing)}>{playing?<Pause fill="currentColor"/>:<Play fill="currentColor"/>}</button><button><SkipForward/></button><button><Repeat2/></button></div><div className="progress"><span>1:18</span><i><b style={{width:playing?"42%":"28%"}}/></i><span>3:42</span></div></div>
+      <div className="volume"><ListMusic/><Volume2/><i><b/></i></div>
+    </div>
+  </main>
+}
